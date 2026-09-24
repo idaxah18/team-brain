@@ -1,0 +1,10 @@
+---
+description: Vault team-brain — contexto por palabras clave
+globs: "**/*.md"
+alwaysApply: true
+---
+
+- Lee `AGENTS.md` en la raíz de este repo antes de cambios masivos.
+- Resuelve contexto vía `index/KEYWORDS.md`; no asumas memoria de chats anteriores.
+- Notas atómicas, wikilinks `[[...]]`, frontmatter YAML (`created`, `tags`, `status`).
+- No escribas código de aplicación aquí; indica rutas en repos hermanos (ej. `PyR/apps/`).
