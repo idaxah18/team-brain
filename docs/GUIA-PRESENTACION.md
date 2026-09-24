@@ -66,15 +66,21 @@ team-brain/
 
 ### 3 — Otro compañero (otra cuenta Cursor)
 
-1. `git clone` del repo **team-brain** (no necesita el código aún).
-2. Abrir carpeta en **Cursor**.
-3. En el Agent escribir:
+1. `git clone` o `git pull` del repo **team-brain** (no necesita Obsidian).
+2. Abrir carpeta **team-brain** en **Cursor** (raíz con `AGENTS.md`).
+3. En el Agent:
 
 ```text
-Palabra clave: <nombre-del-proyecto>. Sigue AGENTS.md.
+Palabra clave: formulario. Sigue AGENTS.md.
 ```
 
-4. La IA responde con lo que está en las notas — **sin** que le pasen PDFs por chat.
+4. Debe leer variables `nombres`, `correo`, `cedular` y que el siguiente paso es el **backend**.
+
+### Guardar un chat de IA para el equipo
+
+1. Resumen en `projects/.../contexto-....md` + actualizar `overview.md`.
+2. Una fila en `index/KEYWORDS.md` (ej. `formulario`).
+3. `git push` en team-brain → el otro hace `git pull` y usa la misma palabra clave.
 
 ### 4 — Quien programa
 

@@ -7,8 +7,6 @@ status: evergreen
 
 | Palabra clave | Leer primero | Luego |
 |---------------|--------------|--------|
-| contexto, onboarding, area, keywords | [[MOC-Home]] | [[domains/meta/workflow-equipo]], [[docs/GUIA-PRESENTACION]] |
-| secretos, credenciales, datos sensibles | [[domains/ops/secrets-policy]] | — |
-| formulario, registro, demo | [[projects/formulario-demo/overview]] | [[docs/GUIA-PRESENTACION]] |
+| formulario | [[projects/formulario-demo/overview]] | [[projects/formulario-demo/contexto-backend-pendiente]] |
 
-Al crear un proyecto: añade una fila aquí + carpeta en `projects/<nombre>/`.
+Solo esta fila activa para la prueba entre devs. Al ampliar el área, añade filas nuevas aquí.

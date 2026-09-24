@@ -5,12 +5,8 @@ status: evergreen
 
 # Segundo cerebro — inicio
 
-- [[index/KEYWORDS]] — palabras clave del equipo
-- [[index/CURSOR-PROMPTS]] — textos para Cursor
-- [[domains/meta/workflow-equipo]] — cómo trabajamos
-- [[domains/ops/secrets-policy]] — datos sensibles
-- [[docs/GUIA-PRESENTACION]] — guía para mostrar al área
-
-## Proyectos
-
-Ver carpeta `projects/` (un expediente por producto).
+- [[index/KEYWORDS]] — palabra activa de prueba: **formulario**
+- [[index/CURSOR-PROMPTS]] — cómo compartir contexto entre Cursors
+- [[projects/formulario-demo/overview]] — estado del formulario y variables
+- [[projects/formulario-demo/contexto-backend-pendiente]] — dónde nos quedamos (backend)
+- [[docs/GUIA-PRESENTACION]] — guía para el área
