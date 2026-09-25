@@ -25,6 +25,8 @@ Resume este chat en projects/<slug>/contexto-FECHA.md (estado, variables, siguie
 Actualiza projects/<slug>/overview.md.
 En index/KEYWORDS.md deja una fila con la palabra clave del equipo (ej. formulario).
 git commit y push en team-brain. El otro dev hace git pull y usa la misma palabra clave.
+
+**Lucy webview:** `Palabra clave: lucy-webview. Sigue AGENTS.md.`
 No incluyas secretos ni datos personales reales.
 ```
 

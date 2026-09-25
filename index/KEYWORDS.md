@@ -8,5 +8,6 @@ status: evergreen
 | Palabra clave | Leer primero | Luego |
 |---------------|--------------|--------|
 | formulario | [[projects/formulario-demo/overview]] | [[projects/formulario-demo/contexto-backend-pendiente]] |
+| lucy-webview | [[projects/lucy-webview/overview]] | [[projects/lucy-webview/como-esta-hecho]], [[projects/lucy-webview/pendiente-integracion-apis]] |
 
-Solo esta fila activa para la prueba entre devs. Al ampliar el área, añade filas nuevas aquí.
+Al ampliar el área, añade filas nuevas aquí.
