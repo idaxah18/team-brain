@@ -1,0 +1,10 @@
+{
+	"id": "switch-to-cursor",
+	"name": "Switch2Cursor",
+	"version": "1.0.4",
+	"minAppVersion": "1.13.0",
+	"description": "Open your vault or current note in Cursor with one click, including cursor position navigation.",
+	"author": "Liu",
+	"authorUrl": "https://github.com/xingzixhh",
+	"isDesktopOnly": true
+}

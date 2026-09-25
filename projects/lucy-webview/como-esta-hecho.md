@@ -1,83 +1,68 @@
 ---
-tags: [project, lucy-webview, arquitectura, ui]
+tags: [project, lucy-webview, lucy_webview, arquitectura, ui]
 status: growing
 updated: 2026-09-25
+keyword: lucy_webview
 ---
 
-# Lucy Webview — cómo está hecho
+# lucy_webview — cómo está hecho
 
 ## Arquitectura en una frase
 
-Laravel sirve un **shell HTML único**; Vue Router monta **un solo chat** que ejecuta un **grafo de nodos** en JavaScript (equivalente a pasos del bot), sin llamadas backend de negocio todavía.
+WhatsApp (Jelou) abre **webview** → Laravel sirve SPA → **Vue chat** ejecuta grafo de nodos → llamadas **`/api/v1/omniax/*`** → **Omniax** (GEA).
 
 ```text
 Navegador / Webview Jelou
-  → Laravel `routes/web.php` (fallback SPA)
-  → `resources/views/app.blade.php`
-  → Vite → `resources/js/app.js` → `ChatView.vue`
-  → `lucyChatEngine.js` + `lucyFlowGraph.js`
+  → Laravel routes/web.php (fallback SPA)
+  → resources/views/app.blade.php
+  → Vite → ChatView.vue
+  → lucyChatEngine.js + lucyFlowGraph.js (~267 nodos)
+  → omniax*Api.js → Laravel Omniax*Controller → OmniaxClient
 ```
 
 ## Motor de conversación (frontend)
 
 | Archivo | Rol |
 |---------|-----|
-| `resources/js/flows/lucy/lucyFlowGraph.js` | ~**198 nodos** (`say`, `actions`, `input`, `jelou: 'Nombre skill'`) |
-| `resources/js/flows/lucy/lucyChatEngine.js` | Reducer: texto, botones, ubicación, comandos globales |
-| `resources/js/flows/lucy/flowHelpers.js` | Cadenas asistencia (ubicación → dirección → stub), wizards |
-| `resources/js/flows/lucy/hsmCatalog.js` | Catálogo simulador HSM |
-| `resources/js/flows/lucy/uiMeta.js` | Textos dock, formularios, ocultar duplicados en historial |
-| `resources/js/flows/lucy/flowStepper.js` | Pasos visibles en stepper (auth, asistencia, e-doctor, wizards) |
+| `lucyFlowGraph.js` | Nodos `say`, `actions`, `input`, `jelou`, handlers GEA/Omniax |
+| `lucyChatEngine.js` | Reducer + eventos `geaEnter` / `geaResult` / `geaError` |
+| `flowHelpers.js` | Cadenas asistencia (ubicación → dirección → POST GEA) |
+| `flows/lucy/omniax/*` | Runners médico/dental (agendar, reagendar, crear) |
+| `flows/lucy/gea/*` | GEA: `geaRunner`, `geaNodes`, `geaServiceIds`, `geaEncuesta` |
+| `hsmCatalog.js`, `uiMeta.js`, `flowStepper.js` | HSM simulado, dock, stepper |
 
-Cada nodo puede tener:
+## APIs JS → Laravel
 
-- **`say`**: mensajes del bot (en UI muchos se muestran solo en el panel inferior, no duplicados arriba).
-- **`actions`**: menú de opciones.
-- **`input`**: campo (cédula, nombre, placa, texto libre) con validación en cliente.
-- **`jelou`**: nombre del skill Jelou de referencia.
+| Cliente | Prefijo API |
+|---------|-------------|
+| `omniaxMedicoApi.js` | `/api/v1/omniax/medico` |
+| `omniaxDentalApi.js` | `/api/v1/omniax/dental` |
+| `omniaxGeaApi.js` | `/api/v1/omniax/gea` |
 
-## UI (ya no es WhatsApp)
+## Backend
 
-Componentes principales en `resources/js/components/chat/`:
+| Archivo | Rol |
+|---------|-----|
+| `OmniaxClient.php` | Token, GET/POST/PUT, refresh 401 |
+| `OmniaxGeaController.php` | PDF GEA chatbot |
+| `OmniaxMedicoController.php` / `OmniaxDentalController.php` | PDF servicios 1–12 |
+| `WebviewController.php` | Shell SPA |
+| `config/services.php` | `gea_omniax.*` |
 
-| Componente | Uso |
-|------------|-----|
-| `ChatHeader` | Banner GEA, **Lucy**, slogan, avatar (`/images/lucy-avatar.png` o SVG fallback), punto en línea |
-| `ChatFlowStepper` | Debajo del header — progreso tipo Nuxt UI Stepper (inspirado, implementación propia) |
-| `ChatAuthTabs` | Cédula + nombre con **tabs animados** (Enter / Continuar avanza pestaña) |
-| `ChatFormPanel` | Formularios de un campo (placa, dirección, etc.) |
-| `ChatDockIntro` + `ChatMenuList` | Pregunta + lista con iconos y colores GEA |
-| `ChatNarrative` / `ChatUserChip` | Historial estilo app |
-| `ChatMenuList` | Animación al elegir opción (~380 ms) antes de navegar |
+`routes/api.php`: health + tres prefijos Omniax.
 
-Comportamiento UX acordado:
+## UI
 
-- Menú **muy largo** (> **75 %** alto viewport): panel inferior en **overlay** (sin “cachito” de chat scrolleable arriba).
-- Mensaje del paso activo: **solo en el dock** (formulario/menú), historial superior sin repetir el mismo texto.
-- Marca: bot **Lucy** (no “Lucy Ecuador Aseguradora” en cabecera).
+Componentes en `resources/js/components/chat/` — header Lucy/GEA, stepper, auth tabs, dock menú, overlay menús largos. Ver notas UX en versión anterior del doc (sin cambio de principio).
 
-## Layout
+## Stubs vs real
 
-- `resources/js/layouts/ChatShell.vue` — header + slot stepper + contenido
-- `resources/js/modules/chat/views/ChatView.vue` — estado, geolocalización, overlay menú
-- Responsive: `max-w-md`, safe areas móvil (sin romper el shell)
+~**44** hojas `stubRegistered` (IA, siniestros, VIP, E-Doctor, etc.). Flujos con API: dental/médico Omniax, crear GEA hogar/vial/ambulancia/médico domicilio/aseguradora, cancelar, en curso, encuesta/ubicación/utilidades GEA.
 
-## Backend Laravel (hoy)
+## Jelou referencia
 
-- `app/Http/Controllers/WebviewController.php` — sirve SPA
-- `routes/api.php` — solo **`/api/health`**; rutas v1 comentadas como ejemplo
-- Sesión/caché en archivo + SQLite local (`.env` típico del proyecto)
+`jelou-lucy-ecuador-observe` — 117 workflows; skill crear GEA **4220**. Webview **no** usa tool Auth 8505.
 
-## Observación Jelou (local, opcional)
+## Continuación
 
-Carpeta de referencia usada para mapear skills (pull CLI, **no push** al bot):
-
-`jelou-lucy-ecuador-observe` — ~117 workflows.
-
-## Qué **no** está cableado aún
-
-- Crear asistencia real, PMA, pagos, fotos, biometría, HSM envío real.
-- Auth cédula/nombre contra servicio GEA (solo validación formato en cliente).
-- Sustituir `stubRegistered()` por respuesta API + estado en sesión.
-
-Ver [[projects/lucy-webview/pendiente-integracion-apis]].
+[[projects/lucy-webview/HANDOFF-CONTINUATION]] y `docs/HANDOFF.md` en el repo.
